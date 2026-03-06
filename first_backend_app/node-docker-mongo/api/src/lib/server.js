@@ -1,0 +1,29 @@
+import express from 'express'
+import dotenv from "dotenv"
+
+// Load env.development explicitly
+// dotenv.config({ path: ".env.development" }); // alternative script => nodemon --env-file=.env.development src/index.js
+
+export const startServer = () => {
+
+    const httpServer = express();
+    const port = process.env.PORT
+
+    try {
+        httpServer.listen(port, () => {
+            console.log(`Server running on port ${port}`)
+        })
+    } catch (err){
+        throw new Error(err)
+    }
+}
+
+
+
+// const app = express()
+
+// app.get('/', (req, res) => {
+//   res.send('Hello World')
+// });
+
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
