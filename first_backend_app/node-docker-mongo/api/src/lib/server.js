@@ -1,4 +1,5 @@
 import express from 'express'
+import config from './config.js'
 import dotenv from "dotenv"
 
 // Load env.development explicitly
@@ -7,9 +8,11 @@ import dotenv from "dotenv"
 export const startServer = () => {
 
     const httpServer = express();
-    const port = process.env.PORT
+    const port = config.port
 
     try {
+
+        console.log(`Testing docker images...`)
         httpServer.listen(port, () => {
             console.log(`Server running on port ${port}`)
         })
