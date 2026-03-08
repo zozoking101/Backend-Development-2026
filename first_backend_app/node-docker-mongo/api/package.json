@@ -4,7 +4,11 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "start:dev": "nodemon --env-file=.env.development src/index.js"
+    "start:dev": "nodemon --env-file=.env.development src/index.js",
+    "docker:build": "docker build -t my-app/express-api:latest-dev .",
+    "docker:run": "docker run --name api my-app/express-api:latest-dev",
+    "docker:stop": "docker stop api",
+    "docker:rm": "docker rm $(docker ps -a -q)"
   },
   "keywords": [],
   "author": "Zoe O",
