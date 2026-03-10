@@ -6,9 +6,9 @@
   "scripts": {
     "start:dev": "nodemon --env-file=.env.development src/index.js",
     "docker:build": "docker build -t my-app/express-api:latest-dev .",
-    "docker:run": "docker run --name api my-app/express-api:latest-dev",
+    "docker:run": "docker run -v ./:/usr/src/app --name api my-app/express-api:latest-dev",
     "docker:stop": "docker stop api",
-    "docker:rm": "docker rm $(docker ps -a -q)"
+    "docker:rm": "docker ps -aq | xargs docker rm"
   },
   "keywords": [],
   "author": "Zoe O",
