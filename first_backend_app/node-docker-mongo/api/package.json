@@ -8,7 +8,7 @@
     "docker:build": "docker build -t my-app/express-api:latest-dev .",
     "docker:run": "docker run -v ./:/usr/src/app --name api my-app/express-api:latest-dev",
     "docker:stop": "docker stop api",
-    "docker:rm": "docker ps -aq | xargs docker rm"
+    "docker:rm": "docker container prune -f"
   },
   "keywords": [],
   "author": "Zoe O",

@@ -10,6 +10,15 @@ export const startServer = () => {
     const httpServer = express();
     const port = config.port
 
+    // TODO - abstract this to a router file
+    // Test route for port config
+    httpServer.get('/ping', (req, res) => {
+        console.log(`ℹ️ - Ping route: ${req.url} ${Date.now()}`)
+        res.status(200).json({
+            message: '✅ - Pong: test successful'
+        })
+    })
+
     try {
 
         httpServer.listen(port, () => {
