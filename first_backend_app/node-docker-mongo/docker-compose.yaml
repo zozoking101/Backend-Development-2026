@@ -1,5 +1,15 @@
-version: "3.8"
 services:
+
+ mongo:
+  container_name: my-app-db
+  image: mongo:latest
+  restart: unless-stopped
+  env_file: .env.development
+  ports:
+   - "27017:27017"
+  # volumes:
+  #  - ./data:/data/db
+  
  api:
   container_name: api
   build: ./api
