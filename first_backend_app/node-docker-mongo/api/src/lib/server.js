@@ -10,14 +10,28 @@ export const startServer = () => {
     const httpServer = express();
     const port = config.port
 
+    // .use for handling all incoming requests
+    httpServer.use((req, res, next) => {
+        console.log(`1️⃣ - First express middleware func`)
+        next()
+    })
+
+    
+
+    // .use for handling any requests that start with api
+    httpServer.use('/api', (req, res, next) => {
+        console.log(`2️⃣ - second express middleware func`)
+        next()
+    })
+
     // TODO - abstract this to a router file
     // Test route for port config
-    httpServer.get('/ping', (req, res) => {
-        console.log(`ℹ️ - Ping route: ${req.url} ${Date.now()}`)
-        res.status(200).json({
-            message: '✅ - Pong: test successful'
-        })
-    })
+    // httpServer.get('/ping', (req, res) => {
+    //     console.log(`ℹ️ - Ping route: ${req.url} ${Date.now()}`)
+    //     res.status(200).json({
+    //         message: '✅ - Pong: test successful'
+    //     })
+    // })
 
     try {
 
