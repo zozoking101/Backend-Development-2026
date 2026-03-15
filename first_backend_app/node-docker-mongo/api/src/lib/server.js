@@ -1,54 +1,47 @@
 import express from 'express'
 import config from './config.js'
 import dotenv from "dotenv"
+import apiRouter from './routes/api.router.js'
+import productsRouter from './routes/products.router.js'
+import usersRouter from './routes/users.router.js'
+// import { setupRoutes } from './setupRoutes.js'
 
-// Load env.development explicitly
-// dotenv.config({ path: ".env.development" }); // alternative script => nodemon --env-file=.env.development src/index.js
+import { apiLogger, usersLogger, productsLogger } from './middleware/logger.middleware.js'
+import { notFound } from './middleware/notFound.middleware.js'
+
+
+
+console.log("🔥 SERVER RESTARTED")
+
 
 export const startServer = () => {
 
-    const httpServer = express();
+    // const httpServer = express()
+    const app = express()
     const port = config.port
 
-    // .use for handling all incoming requests
-    httpServer.use((req, res, next) => {
-        console.log(`1️⃣ - First express middleware func`)
-        next()
-    })
+    // body parser
+    app.use(express.json())
 
+    // setupRoutes(httpServer)
     
 
-    // .use for handling any requests that start with api
-    httpServer.use('/api', (req, res, next) => {
-        console.log(`2️⃣ - second express middleware func`)
-        next()
-    })
+    // routes + middleware
+    app.use('/api', apiLogger, apiRouter)
+    app.use('/users', usersLogger, usersRouter)
+    app.use('/products', productsLogger, productsRouter)
 
-    // TODO - abstract this to a router file
-    // Test route for port config
-    // httpServer.get('/ping', (req, res) => {
-    //     console.log(`ℹ️ - Ping route: ${req.url} ${Date.now()}`)
-    //     res.status(200).json({
-    //         message: '✅ - Pong: test successful'
-    //     })
-    // })
+    // 404 handler (always last)
+    app.use(notFound)
+   
+   
 
     try {
 
-        httpServer.listen(port, () => {
+        app.listen(port, () => {
             console.log(`Server running on port ${port}`)
         })
     } catch (err){
         throw new Error(err)
     }
 }
-
-
-
-// const app = express()
-
-// app.get('/', (req, res) => {
-//   res.send('Hello World')
-// });
-
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`))

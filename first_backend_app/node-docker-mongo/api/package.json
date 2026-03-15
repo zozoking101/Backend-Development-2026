@@ -4,7 +4,7 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "start:dev": "nodemon --env-file=.env.development src/index.js",
+    "start:dev": "nodemon -L --env-file=.env.development src/index.js",
     "docker:build": "docker build -t my-app/express-api:latest-dev .",
     "docker:run": "docker run -p 3000:3000 -v ./:/usr/src/app  --name api my-app/express-api:latest-dev",
     "docker:stop": "docker stop api",
