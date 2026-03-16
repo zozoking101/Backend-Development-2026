@@ -1,9 +1,9 @@
 import express from 'express'
 import config from './config.js'
-import dotenv from "dotenv"
 import apiRouter from './routes/api.router.js'
 import productsRouter from './routes/products.router.js'
 import usersRouter from './routes/users.router.js'
+import accountsRouter from './routes/accounts.router.js'
 // import { setupRoutes } from './setupRoutes.js'
 
 import { apiLogger, usersLogger, productsLogger } from './middleware/logger.middleware.js'
@@ -24,12 +24,22 @@ export const startServer = () => {
     app.use(express.json())
 
     // setupRoutes(httpServer)
-    
+    app.get('/', (req, res) => {
+    res.json({
+            message: "👋🏽 API running",
+            endpoints: {
+                api: "/api",
+                users: "/users",
+                products: "/products"
+            }
+        })
+    })
 
     // routes + middleware
     app.use('/api', apiLogger, apiRouter)
     app.use('/users', usersLogger, usersRouter)
     app.use('/products', productsLogger, productsRouter)
+    app.use('/accounts', accountsRouter)
 
     // 404 handler (always last)
     app.use(notFound)
