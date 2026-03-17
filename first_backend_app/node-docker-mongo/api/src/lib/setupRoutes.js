@@ -1,43 +1,56 @@
 import express from 'express'
+import productsRouter from './routes/products.router.js'
+import usersRouter from './routes/users.router.js'
+import accountsRouter from './routes/accounts.router.js'
+import ordersRouter from './routes/orders.router.js'
+import { accountsLogger, ordersLogger, usersLogger, productsLogger } from './middleware/logger.middleware.js'
+import { notFound } from './middleware/notFound.middleware.js'
 
-const router = express.Router()
+export const setupRoutes = (app, config) => {
+    console.log(`\n⚙️ Testing setupRoutes()`)
 
-export const setupRoutes = (app) => {
-    console.log(`\n Testing setup routes function`)
+    // body parser
+    app.use(express.json())
 
-     
+    const { prefix, version, routes, version_number, service, docs, status } = config.api
+    const base = prefix + (version || '')
+    const endpoints = { base }
+    app.get('/', (req, res) => {
 
-    // httpServer.use((req, res, next) => {
-    //     console.log(`${req.method} ${req.url}`)
-    //      next()
-    // })
+        Object.keys(routes).forEach((key) => {
+            const route = routes[key]
+            if (route.enabled) {
+            endpoints[key] = base + route.path
+            }
+        })
 
-    router.use('/', (req, res) => {
-        console.log(`1️⃣ - Router middleware function one`)
-        res.sendStatus(200)
+        res.json({
+            message: "👋🏽 API running",
+            service,
+            version: version_number,
+            docs,
+            status,
+            endpoints
+        })
     })
-    
 
-    app.use('/api', router)
+    // routes + middleware
+    if (routes.users.enabled) {
+    app.use(base + routes.users.path, usersLogger, usersRouter)
+    }
 
+    if (routes.products.enabled) {
+    app.use(base + routes.products.path, productsLogger, productsRouter)
+    }
 
-    // TODO - abstract this to a router file
-    // Test route for port config
+    if (routes.accounts.enabled) {
+    app.use(base + routes.accounts.path, accountsLogger, accountsRouter)
+    }
 
-    // router.get('/api/ping', (req, res) => {
-    //     console.log(`ℹ️ - Ping route: ${req.url} ${Date.now()}`)
-    //     res.status(200).json({
-    //         message: '✅ - Pong: test successful'
-    //     })
-    // })
+    if (routes.orders.enabled) {
+    app.use(base + routes.orders.path, ordersLogger, ordersRouter)
+    }
 
-    httpServer.use('/', router)
-
-
-    // router.use((req, res) => { 
-    //     res.status(404).json({ 
-    //         message: `🚫 ${req.url} route not found! `
-    //     }) 
-    // })
-
+    // 404 handler (always last)
+    app.use(notFound)
 }

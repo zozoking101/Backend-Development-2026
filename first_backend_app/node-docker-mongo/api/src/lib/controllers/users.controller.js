@@ -4,6 +4,11 @@ export const usersPing = (req, res) => {
     })
 }
 
+const users = [
+  { id: 1234, name: "Alice Smith" },
+  { id: 2459, name: "Bob Jones" }
+]
+
 export const getUser = (req, res) => {
   const { id } = req.params
 
