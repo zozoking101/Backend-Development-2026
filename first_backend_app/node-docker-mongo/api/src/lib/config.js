@@ -33,7 +33,7 @@ export default {
         },
         orders: {
             path: '/orders',
-            enabled: false
+            enabled: true
         }
     },
   },
