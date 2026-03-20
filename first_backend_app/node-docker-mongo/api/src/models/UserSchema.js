@@ -1,4 +1,25 @@
 import mongoose from "mongoose"
+import validate from "validate.js"
+
+
+const constraints = {
+  email: () => ({
+    presence: { allowEmpty: false },
+    email: true
+  }),
+
+  name: () => ({
+    presence: { allowEmpty: false },
+    length: {
+      minimum: 2,
+      maximum: 100
+    },
+    format: {
+      pattern: /^[a-zA-Z]+([ '-][a-zA-Z]+)*$/,
+    }
+  })
+}
+
 const { Schema } = mongoose
 
 const UserSchema = new Schema({
@@ -6,12 +27,20 @@ const UserSchema = new Schema({
       first: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        validate: {
+            validator: (value) => !(validate.single(value, constraints.name)),  // valid => undefined => true
+            message: (props) => `${props.value} is not a valid first name!`
+        }
       },
       last: {
         type: String,
         required: true,
-        trim: true
+        trim: true, 
+        validate: {
+            validator: (value) => !(validate.single(value, constraints.name)),  // valid => undefined => true
+            message: (props) => `${props.value} is not a valid last name!`
+        }
       }
     },
 
@@ -22,17 +51,15 @@ const UserSchema = new Schema({
     },
 
     email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true, 
-      validate: {
-          validator: function (value) {
-              return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value);
-          },
-          message: (props) => `${props.value} is not a valid email address!`
-      }
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        validate: {
+            validator: (value) => !(validate.single(value, constraints.email)),  // valid => undefined => true
+            message: (props) => `${props.value} is not a valid email address!`
+        }
     },
 
     password: {
