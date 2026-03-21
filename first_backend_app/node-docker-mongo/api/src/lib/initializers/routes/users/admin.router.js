@@ -1,5 +1,5 @@
 import Router from 'express'
-import { getAllUsers, getUser, banUser, unbanUser, deleteUser, createUser, updateUser } from '../../controllers/users/users.controller.js'
+import { getAllUsers, getUser, banUser, unbanUser, deleteUser, createUser, updateUser } from '../../controllers/users/admin.controller.js'
 
 const router = Router()
 

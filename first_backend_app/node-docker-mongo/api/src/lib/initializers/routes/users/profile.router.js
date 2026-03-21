@@ -1,5 +1,5 @@
 import Router from 'express'
-import { getProfile, updateProfile, deactivateProfile, changePassword } from '../../controllers/users/users.controller.js'
+import { getProfile, updateProfile, deactivateProfile, changePassword } from '../../controllers/users/profile.controller.js'
 
 const router = Router()
 
