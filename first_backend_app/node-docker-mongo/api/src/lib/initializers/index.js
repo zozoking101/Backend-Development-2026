@@ -36,13 +36,13 @@ export const initializeApp = async(app, config) => {
         })
     })
 
-    ```
-└── routes/
-    └── accounts/
-        ├── accounts.router.js      (mounts all subrouters)
-        ├── transactions.router.js  /api/v1/accounts/transactions
-        └── funding.router.js       /api/v1/accounts/funding
-    ```
+    
+// └── routes/
+//     └── accounts/
+//         ├── accounts.router.js      (mounts all subrouters)
+//         ├── transactions.router.js  /api/v1/accounts/transactions
+//         └── funding.router.js       /api/v1/accounts/funding
+
 
     // accounts mounted first (required for order processing)
     if (routes.accounts.enabled)
