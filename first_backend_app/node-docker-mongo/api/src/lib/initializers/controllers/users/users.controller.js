@@ -1,5 +1,5 @@
-import { UserService } from '../../services/UserService.js'
-import { PayloadError, InternalError } from '../../../errors/Errors.js'
+import { UserService } from '../../../services/UserService.js'
+import { PayloadError, InternalError } from '../../../../errors/Errors.js'
 import mongoose from 'mongoose'
 
 const service = 'user'

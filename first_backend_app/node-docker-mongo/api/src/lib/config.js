@@ -21,7 +21,7 @@ export default {
         },
         accounts: {
             path: '/accounts',
-            enabled: false
+            enabled: true,
         },
         products: {
             path: '/products',
