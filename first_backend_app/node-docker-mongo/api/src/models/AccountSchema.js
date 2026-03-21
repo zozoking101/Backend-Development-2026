@@ -73,4 +73,4 @@ const AccountSchema = new Schema({
     timestamps: true
 })
 
-export const Accounts = mongoose.model('Account', OrderSchema)
+export const Account = mongoose.model('Account', OrderSchema)
