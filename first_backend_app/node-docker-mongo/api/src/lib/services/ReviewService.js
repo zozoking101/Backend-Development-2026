@@ -15,6 +15,6 @@ export const ReviewService = {
             totalReviews: { $sum: 1 }
         }}
     ]),
-    update: (id, data) => Review.findByIdAndUpdate(id, { $set: data }, { new: true }),
+    update: (id, data) => Review.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }),
     delete: (id) => Review.findByIdAndDelete(id)
 }

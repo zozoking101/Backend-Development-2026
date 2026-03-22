@@ -7,6 +7,6 @@ export const OrderService = {
     findById: (id) => Order.findById(id).populate('buyer', 'name email').populate('items.product', 'name price'),
     findByUser: (userId) => Order.find({ buyer: userId }).populate('items.product', 'name price'),
     findByStatus: (status) => Order.find({ status }).populate('buyer', 'name email'),
-    update: (id, data) => Order.findByIdAndUpdate(id, { $set: data }, { new: true }),
+    update: (id, data) => Order.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }),
     delete: (id) => Order.findByIdAndDelete(id)
 }

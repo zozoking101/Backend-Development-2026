@@ -52,6 +52,6 @@ export const AccountService = {
                 return account.save()
             }),
 
-    update: (id, data) => Account.findByIdAndUpdate(id, { $set: data }, { new: true }),
+    update: (id, data) => Account.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }),
     delete: (id) => Account.findByIdAndDelete(id)
 }

@@ -1,12 +1,14 @@
 import Router from 'express'
-import { getProfile, updateProfile, deactivateProfile, changePassword } from '../../controllers/users/profile.controller.js'
+import { getProfile, updateProfile, activateProfile, deactivateProfile, changePassword } from '../../controllers/users/profile.controller.js'
 
 const router = Router()
 
 // profile.router.js — authenticated user managing their own data
-router.get('/', getProfile)
-router.put('/update', updateProfile)
-router.delete('/deactivate', deactivateProfile)
-router.put('/change-password', changePassword)
+// router.get('/all', getAllProfiles)
+router.get('/:id', getProfile)
+router.put('/update/:id', updateProfile)
+router.put('/activate/:id', activateProfile)
+router.put('/deactivate/:id', deactivateProfile)
+router.put('/change-password/:id', changePassword)
 
 export default router

@@ -2,31 +2,39 @@
 import { UserService } from '../../../services/UserService.js'
 import { PayloadError, InternalError } from '../../../../errors/Errors.js'
 import mongoose from 'mongoose'
+import bcrypt from 'bcryptjs'
 
 const service = 'auth'
 
 export const register = (req, res) => {
-    UserService.create(req.body)
-        .then(user =>
-            res.status(201).json({
-                message: `Successfully registered: ${user.name.first} ${user.name.last} 👋🏽`,
-                user
+    const { password, ...rest } = req.body
+
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
+        if (err)
+            return res.status(500).json(new InternalError(err.message, null, service).error)
+
+        UserService.create({ ...rest, password: hashedPassword })
+            .then(user =>
+                res.status(201).json({
+                    message: `Successfully registered: ${user.name.first} ${user.name.last} 👋🏽`,
+                    user
+                })
+            )
+            .catch(err => {
+                if (err.code === 11000) {
+                    const key = Object.keys(err.keyPattern)[0] || 'email'
+                    throw new PayloadError(`User with ${key} ${req.body[key]} already exists`, key, service)
+                }
+                if (err.name === 'ValidationError') {
+                    const messages = Object.values(err.errors).map(e => ({ field: e.path, message: e.message }))
+                    throw new PayloadError(messages, null, service)
+                }
+                throw new InternalError(err.message, null, service)
             })
-        )
-        .catch(err => {
-            if (err.code === 11000) {
-                const key = Object.keys(err.keyPattern)[0] || 'email'
-                throw new PayloadError(`User with ${key} ${req.body[key]} already exists`, key, service)
-            }
-            if (err.name === 'ValidationError') {
-                const messages = Object.values(err.errors).map(e => ({ field: e.path, message: e.message }))
-                throw new PayloadError(messages, null, service)
-            }
-            throw new InternalError(err.message, null, service)
-        })
-        .catch(err => {
-            if (err.error) return res.status(err.statusCode).json(err.error)
-        })
+            .catch(err => {
+                if (err.error) return res.status(err.statusCode).json(err.error)
+            })
+    })
 }
 
 export const login = (req, res) => {

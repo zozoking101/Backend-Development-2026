@@ -7,11 +7,11 @@ export const ProductService = {
     findById: (id) => Product.findById(id),
     findByCategory: (categoryId) => Product.find({ category: categoryId }),
     findLowStock: (threshold = 10) => Product.find({ stock: { $lte: threshold }, isAvailable: true }),
-    update: (id, data) => Product.findByIdAndUpdate(id, { $set: data }, { new: true }),
+    update: (id, data) => Product.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }),
     adjustStock: (id, amount) => Product.findByIdAndUpdate(
         id,
         { $inc: { stock: amount } },   // $inc handles both positive and negative
-        { new: true }
+        { returnDocument: 'after' }
     ),
     delete: (id) => Product.findByIdAndDelete(id)
 }

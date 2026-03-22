@@ -6,6 +6,6 @@ export const CategoryService = {
     findAll: () => Category.find(),
     findById: (id) => Category.findById(id),
     findByName: (name) => Category.findOne({ name }),
-    update: (id, data) => Category.findByIdAndUpdate(id, { $set: data }, { new: true }),
+    update: (id, data) => Category.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }),
     delete: (id) => Category.findByIdAndDelete(id)
 }
