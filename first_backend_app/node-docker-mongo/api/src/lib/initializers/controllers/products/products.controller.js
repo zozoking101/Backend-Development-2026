@@ -86,7 +86,7 @@ export const deleteProduct = (req, res) => {
         .then(product => {
             if (!product)
                 throw new PayloadError(`Product with id ${id} not found`, 'id', service)
-            res.status(200).json({ message: `Successfully deleted product ${id}` })
+            res.status(200).json({ message: `Successfully deleted product ${id}: ${product.name}` })
         })
         .catch(err =>
             res.status(err.statusCode || 500).json(err.error)

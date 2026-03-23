@@ -26,7 +26,47 @@ export const getLowStock = (req, res) => {
     const threshold = Number(req.query.threshold) || 10
 
     ProductService.findLowStock(threshold)
-        .then(products => res.status(200).json(products))
+        .then(products => {
+            if (products.length === 0)
+                return res.status(200).json({ message: 'No products found below stock threshold' })
+            res.status(200).json(products)
+        })
+        .catch(err =>
+            res.status(500).json(new InternalError(err.message, null, service).error)
+        )
+}
+
+export const getProductLowStock = (req, res) => {
+    const { id } = req.params
+    const threshold = Number(req.query.threshold) || 10
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
+
+    ProductService.findLowStockByProduct(id, threshold)
+        .then(products => {
+            if (products.length === 0)
+                return res.status(200).json({ message: `No products of product ${id} found below stock threshold of ${threshold}` })
+            res.status(200).json(products)
+        })
+        .catch(err =>
+            res.status(500).json(new InternalError(err.message, null, service).error)
+        )
+}
+
+export const getCategoryLowStock = (req, res) => {
+    const { id } = req.params
+    const threshold = Number(req.query.threshold) || 10
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
+
+    ProductService.findLowStockByCategory(id, threshold)
+        .then(products => {
+            if (products.length === 0)
+                return res.status(200).json({ message: `No products in category ${id} found below stock threshold of ${threshold}` })
+            res.status(200).json(products)
+        })
         .catch(err =>
             res.status(500).json(new InternalError(err.message, null, service).error)
         )

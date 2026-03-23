@@ -1,5 +1,6 @@
 // controllers/products/categories.controller.js
 import { CategoryService } from '../../../services/CategoryService.js'
+import { ProductService } from '../../../services/ProductService.js'
 import { PayloadError, InternalError } from '../../../../errors/Errors.js'
 import mongoose from 'mongoose'
 
@@ -72,6 +73,46 @@ export const updateCategory = (req, res) => {
         )
 }
 
+export const activateCategory = (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
+    
+    CategoryService.update(id, { isActive: true })
+        .then(category => {
+            if (!category)
+                throw new PayloadError(`Category with id ${id} not found`, 'id', service)
+            res.status(200).json({
+                message: `Successfully activated category ${id}`,
+                category
+            })
+        })
+        .catch(err =>
+            res.status(err.statusCode || 500).json(err.error)
+        )
+}
+
+export const deactivateCategory = (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
+    
+    CategoryService.update(id, { isActive: false })
+        .then(category => {
+            if (!category)
+                throw new PayloadError(`Category with id ${id} not found`, 'id', service)
+            res.status(200).json({
+                message: `Successfully deactivated category ${id}`,
+                category
+            })
+        })
+        .catch(err =>
+            res.status(err.statusCode || 500).json(err.error)
+        )
+}
+
 export const deleteCategory = (req, res) => {
     const { id } = req.params
 
@@ -82,7 +123,13 @@ export const deleteCategory = (req, res) => {
         .then(category => {
             if (!category)
                 throw new PayloadError(`Category with id ${id} not found`, 'id', service)
-            res.status(200).json({ message: `Successfully deleted category ${id}` })
+
+            return ProductService.deleteByCategory(id)
+                .then(result =>
+                    res.status(200).json({
+                        message: `Successfully deleted category ${category.name} and ${result.deletedCount} associated product(s)`
+                    })
+                )
         })
         .catch(err =>
             res.status(err.statusCode || 500).json(err.error)

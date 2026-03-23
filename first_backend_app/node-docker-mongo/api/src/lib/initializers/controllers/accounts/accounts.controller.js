@@ -74,6 +74,46 @@ export const updateAccount = (req, res) => {
         )
 }
 
+export const lockAccount = (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
+
+    AccountService.update(id, { "isLocked": true })
+        .then(account => {
+            if (!account)
+                throw new PayloadError(`Account with id ${id} not found`, 'id', service)
+            res.status(200).json({
+                message: `Account ${id} successfully locked`,
+                account
+            })
+        })
+        .catch(err =>
+            res.status(err.statusCode || 500).json(err.error)
+        )
+}
+
+export const unlockAccount = (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
+
+    AccountService.update(id, { "isLocked": false })
+        .then(account => {
+            if (!account)
+                throw new PayloadError(`Account with id ${id} not found`, 'id', service)
+            res.status(200).json({
+                message: `Account ${id} successfully unlocked`,
+                account
+            })
+        })
+        .catch(err =>
+            res.status(err.statusCode || 500).json(err.error)
+        )
+}
+
 export const deleteAccount = (req, res) => {
     const { id } = req.params
 

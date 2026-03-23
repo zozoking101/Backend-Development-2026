@@ -85,6 +85,48 @@ export const updateOrder = (req, res) => {
         )
 }
 
+export const verifyOrderPayment = (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
+
+    OrderService.update(id, { "isPaid": true })
+        .then(order => {
+            if (!order)
+                throw new PayloadError(`Order with id ${id} not found`, 'id', service)
+            res.status(200).json({
+                message: `Order ${id} payment verified successfully`,
+                order
+            })
+        })
+        .catch(err =>
+            res.status(err.statusCode || 500).json(err.error)
+        )
+}
+
+export const unverifyOrderPayment = (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
+
+    OrderService.update(id, { "isPaid": false })
+        .then(order => {
+            if (!order)
+                throw new PayloadError(`Order with id ${id} not found`, 'id', service)
+            res.status(200).json({
+                message: `Order ${id} payment could not be verified`,
+                order
+            })
+        })
+        .catch(err =>
+            res.status(err.statusCode || 500).json(err.error)
+        )
+}
+
+
+
 export const deleteOrder = (req, res) => {
     const { id } = req.params
 
