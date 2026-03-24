@@ -11,46 +11,46 @@ export const AccountService = {
         { 'transactions.$': 1 }         // return only the matching transaction
     ),
 
-    credit: (accountId, amount, description = 'Credit', orderId = null) =>
-        Account.findById(accountId)
-            .then(account => {
-                if (!account) throw new Error(`Account ${accountId} not found`)
-                if (account.isLocked) throw new Error(`Account ${accountId} is locked`)
+    credit: (userId, amount, description = 'Credit', orderId = null) =>
+    Account.findOne({ user: userId })
+        .then(account => {
+            if (!account) throw new Error(`Account for user ${userId} not found`)
+            if (account.isLocked) throw new Error(`Account is locked`)
 
-                const newBalance = account.balance + amount
+            const newBalance = account.balance + amount
 
-                account.balance = newBalance
-                account.transactions.push({
-                    type: 'credit',
-                    amount,
-                    description,
-                    order: orderId,
-                    balanceAfter: newBalance
-                })
+            account.balance = newBalance
+            account.transactions.push({
+                type: 'credit',
+                amount,
+                description,
+                order: orderId,
+                balanceAfter: newBalance
+            })
 
-                return account.save()
-            }),
+            return account.save()
+        }),
 
-    debit: (accountId, amount, description = 'Debit', orderId = null) =>
-        Account.findById(accountId)
-            .then(account => {
-                if (!account) throw new Error(`Account ${accountId} not found`)
-                if (account.isLocked) throw new Error(`Account ${accountId} is locked`)
-                if (account.balance < amount) throw new Error(`Insufficient balance`)
+    debit: (userId, amount, description = 'Debit', orderId = null) =>
+    Account.findOne({ user: userId })
+        .then(account => {
+            if (!account) throw new Error(`Account for user ${userId} not found`)
+            if (account.isLocked) throw new Error(`Account is locked`)
+            if (account.balance < amount) throw new Error(`Insufficient balance`)
 
-                const newBalance = account.balance - amount
+            const newBalance = account.balance - amount
 
-                account.balance = newBalance
-                account.transactions.push({
-                    type: 'debit',
-                    amount,
-                    description,
-                    order: orderId,
-                    balanceAfter: newBalance
-                })
+            account.balance = newBalance
+            account.transactions.push({
+                type: 'debit',
+                amount,
+                description,
+                order: orderId,
+                balanceAfter: newBalance
+            })
 
-                return account.save()
-            }),
+            return account.save()
+        }),
 
     update: (id, data) => Account.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }),
     delete: (id) => Account.findByIdAndDelete(id)

@@ -8,6 +8,6 @@ router.post('/request/:orderId', requestReturn)     // user requests return
 router.get('/all', getAllReturns)                   // admin sees all returns
 router.put('/approve/:id', approveReturn)           // admin approves
 router.put('/reject/:id', rejectReturn)             // admin rejects
-router.post('/refund/:id', processRefund)           // trigger refund to account
+router.put('/refund/:id', processRefund)           // trigger refund to account
 
 export default router

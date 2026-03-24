@@ -14,7 +14,8 @@ export const createOrder = (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(buyer))
         return res.status(400).json(new PayloadError(`Invalid buyer id format`, 'buyer', service).error)
 
-    // check buyer has enough balance before creating order
+    let createdOrder = null  // store order so we can reference it after debit
+
     AccountService.findByUser(buyer)
         .then(account => {
             if (!account)
@@ -24,10 +25,14 @@ export const createOrder = (req, res) => {
 
             return OrderService.create({ buyer, items, totalPrice, shippingAddress })
         })
-        .then(order =>
+        .then(order => {
+            createdOrder = order
+            return AccountService.debit(buyer, totalPrice, `Payment for order ${order._id}`, order._id)
+        })
+        .then(() =>
             res.status(201).json({
                 message: `Order created successfully`,
-                order
+                order: createdOrder
             })
         )
         .catch(err => {

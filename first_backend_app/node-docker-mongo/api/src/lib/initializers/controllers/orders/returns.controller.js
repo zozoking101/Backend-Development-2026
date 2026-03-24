@@ -87,22 +87,17 @@ export const processRefund = (req, res) => {
         return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
 
     OrderService.findById(id)
-        .then(order => {
-            if (!order)
-                throw new PayloadError(`Order with id ${id} not found`, 'id', service)
-            if (order.status !== 'return_approved')
-                throw new PayloadError(`Order must be return_approved before refund`, 'status', service)
+    .then(order => {
+        if (!order)
+            throw new PayloadError(`Order with id ${id} not found`, 'id', service)
+        if (order.status !== 'return_approved')
+            throw new PayloadError(`Order must be return_approved before refund`, 'status', service)
 
-            return AccountService.credit(order.buyer, order.totalPrice, `Refund for order ${id}`, id)
-        })
-        .then(() => OrderService.update(id, { status: 'refunded', isPaid: false }))
-        .then(order =>
-            res.status(200).json({
-                message: `Refund of $${order.totalPrice} processed for order ${id}`,
-                order
-            })
-        )
+        const buyerId = order.buyer._id || order.buyer  // ← handles both populated and raw
+        return AccountService.credit(buyerId, order.totalPrice, `Refund for order ${id}`, id)
+    })
+        .then(account => res.status(200).json(account))
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
