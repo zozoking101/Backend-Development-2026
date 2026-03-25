@@ -1,6 +1,7 @@
 // controllers/orders/orders.controller.js
 import { OrderService } from '../../../services/OrderService.js'
 import { AccountService } from '../../../services/AccountService.js'
+import { ProductService } from '../../../services/ProductService.js'
 import { PayloadError, InternalError } from '../../../../errors/Errors.js'
 import mongoose from 'mongoose'
 
@@ -14,7 +15,7 @@ export const createOrder = (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(buyer))
         return res.status(400).json(new PayloadError(`Invalid buyer id format`, 'buyer', service).error)
 
-    let createdOrder = null  // store order so we can reference it after debit
+    let createdOrder = null
 
     AccountService.findByUser(buyer)
         .then(account => {
@@ -29,6 +30,7 @@ export const createOrder = (req, res) => {
             createdOrder = order
             return AccountService.debit(buyer, totalPrice, `Payment for order ${order._id}`, order._id)
         })
+        .then(() => ProductService.deductOrderStock(items))
         .then(() =>
             res.status(201).json({
                 message: `Order created successfully`,

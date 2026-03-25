@@ -1,6 +1,7 @@
 // controllers/orders/returns.controller.js
 import { OrderService } from '../../../services/OrderService.js'
 import { AccountService } from '../../../services/AccountService.js'
+import { ProductService } from '../../../services/ProductService.js'
 import { PayloadError, InternalError } from '../../../../errors/Errors.js'
 import mongoose from 'mongoose'
 
@@ -86,17 +87,27 @@ export const processRefund = (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id))
         return res.status(400).json(new PayloadError(`Invalid id format: ${id}`, 'id', service).error)
 
-    OrderService.findById(id)
-    .then(order => {
-        if (!order)
-            throw new PayloadError(`Order with id ${id} not found`, 'id', service)
-        if (order.status !== 'return_approved')
-            throw new PayloadError(`Order must be return_approved before refund`, 'status', service)
+    let refundedOrder = null
 
-        const buyerId = order.buyer._id || order.buyer  // ← handles both populated and raw
-        return AccountService.credit(buyerId, order.totalPrice, `Refund for order ${id}`, id)
-    })
-        .then(account => res.status(200).json(account))
+    OrderService.findById(id)
+        .then(order => {
+            if (!order)
+                throw new PayloadError(`Order with id ${id} not found`, 'id', service)
+            if (order.status !== 'return_approved')
+                throw new PayloadError(`Order must be return_approved before refund`, 'status', service)
+
+            refundedOrder = order
+            const buyerId = order.buyer._id || order.buyer
+            return AccountService.credit(buyerId, order.totalPrice, `Refund for order ${id}`, id)
+        })
+        .then(() => ProductService.incrementOrderStock(refundedOrder.items))
+        .then(() => OrderService.update(id, { status: 'refunded', isPaid: false }))
+        .then(() =>
+            res.status(200).json({
+                message: `Refund of $${refundedOrder.totalPrice} processed for order ${id}`,
+                order: refundedOrder
+            })
+        )
         .catch(err =>
             res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )

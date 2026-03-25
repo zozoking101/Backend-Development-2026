@@ -15,6 +15,24 @@ export const ProductService = {
         { $inc: { stock: amount } },   // $inc handles both positive and negative
         { returnDocument: 'after' }
     ),
+    incrementOrderStock: (items) => Promise.all(
+        items.map(item =>
+            Product.findByIdAndUpdate(
+                item.product,
+                { $inc: { stock: item.quantity } },
+                { returnDocument: 'after' }
+            )
+        )
+    ),
+    deductOrderStock: (items) => Promise.all(
+        items.map(item =>
+            Product.findByIdAndUpdate(
+                item.product,
+                { $inc: { stock: -item.quantity } },
+                { returnDocument: 'after' }
+            )
+        )
+    ),
     deleteByCategory: (categoryId) => Product.deleteMany({ category: categoryId }),
     delete: (id) => Product.findByIdAndDelete(id)
 }
