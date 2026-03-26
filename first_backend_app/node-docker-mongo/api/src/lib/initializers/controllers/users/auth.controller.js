@@ -32,7 +32,7 @@ export const register = (req, res) => {
                 throw new InternalError(err.message, null, service)
             })
             .catch(err => {
-                if (err.error) return res.status(err.statusCode).json(err.error)
+                if (err.error) return res.status(err.statusCode).json(err.error  || { messages: [err.message] })
             })
     })
 }
@@ -48,7 +48,7 @@ export const login = (req, res) => {
             res.status(200).json({ message: 'Login successful', user })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -73,7 +73,7 @@ export const forgotPassword = (req, res) => {
             res.status(200).json({ message: `Password reset link sent to ${email}` })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 

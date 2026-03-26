@@ -24,7 +24,7 @@ export const createCategory = (req, res) => {
             throw new InternalError(err.message, null, service)
         })
         .catch(err => {
-            if (err.error) return res.status(err.statusCode).json(err.error)
+            if (err.error) return res.status(err.statusCode).json(err.error  || { messages: [err.message] })
         })
 }
 
@@ -49,7 +49,7 @@ export const getCategory = (req, res) => {
             res.status(200).json(category)
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
@@ -69,7 +69,7 @@ export const updateCategory = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
@@ -89,7 +89,7 @@ export const activateCategory = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
@@ -109,7 +109,7 @@ export const deactivateCategory = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
@@ -132,6 +132,6 @@ export const deleteCategory = (req, res) => {
                 )
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }

@@ -18,7 +18,7 @@ export const getTransactions = (req, res) => {
             res.status(200).json(account.transactions)
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -32,7 +32,7 @@ export const getTransaction = (req, res) => {
             res.status(200).json(transaction)
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -57,6 +57,6 @@ export const filterTransactions = (req, res) => {
             res.status(200).json(transactions)
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }

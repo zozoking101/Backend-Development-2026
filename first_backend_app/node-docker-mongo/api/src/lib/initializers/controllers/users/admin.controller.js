@@ -244,15 +244,15 @@ export const changeDummyUserPassword = (req, res) => {
 
             // If the current password matches, update with the new password
             UserService.update(id, { password: newPassword })
-                .then(updatedUser => {
+                .then(() => {
                     res.status(200).json({ message: 'Password changed successfully' })
                 })
                 .catch(err => {
-                    res.status(err.statusCode || 500).json(err.error)
+                    res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
                 })
         })
         .catch(err => {
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         })
 }
 
@@ -269,6 +269,6 @@ export const deleteUser = (req, res) => {
             res.status(200).json({ message: `User ${id} successfully deleted` })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }

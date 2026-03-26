@@ -23,7 +23,7 @@ export const getOrderTracking = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -47,7 +47,7 @@ export const updateOrderStatus = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -68,6 +68,6 @@ export const getStatusHistory = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }

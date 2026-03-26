@@ -68,7 +68,7 @@ export const getOrder = (req, res) => {
             res.status(200).json(order)
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
@@ -88,7 +88,7 @@ export const updateOrder = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
@@ -108,7 +108,7 @@ export const verifyOrderPayment = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
@@ -128,7 +128,7 @@ export const unverifyOrderPayment = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
@@ -147,6 +147,6 @@ export const deleteOrder = (req, res) => {
             res.status(200).json({ message: `Order ${id} deleted successfully` })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }

@@ -20,7 +20,7 @@ export const getProfile = (req, res) => {
             res.status(200).json(user)
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -48,7 +48,7 @@ export const updateProfile = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -65,7 +65,7 @@ export const activateProfile = (req, res) => {
             res.status(200).json({ message: `Account activated` })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -82,7 +82,7 @@ export const deactivateProfile = (req, res) => {
             res.status(200).json({ message: `Account deactivated` })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -111,9 +111,9 @@ export const changePassword = (req, res) => {
 
                     UserService.update(id, { password: hashedPassword })
                         .then(() => res.status(200).json({ message: 'Password changed successfully' }))
-                        .catch(err => res.status(err.statusCode || 500).json(err.error))
+                        .catch(err => res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] }))
                 })
             })
         })
-        .catch(err => res.status(err.statusCode || 500).json(err.error))
+        .catch(err => res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] }))
 }

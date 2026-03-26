@@ -27,7 +27,7 @@ export const createProduct = (req, res) => {
             throw new InternalError(err.message, null, service)
         })
         .catch(err => {
-            if (err.error) return res.status(err.statusCode).json(err.error)
+            if (err.error) return res.status(err.statusCode).json(err.error  || { messages: [err.message] })
         })
 }
 
@@ -52,7 +52,7 @@ export const getProduct = (req, res) => {
             res.status(200).json(product)
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -72,7 +72,7 @@ export const updateProduct = (req, res) => {
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }
 
@@ -89,6 +89,6 @@ export const deleteProduct = (req, res) => {
             res.status(200).json({ message: `Successfully deleted product ${id}: ${product.name}` })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error  || { messages: [err.message] })
         )
 }

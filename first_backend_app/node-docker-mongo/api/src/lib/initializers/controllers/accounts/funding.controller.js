@@ -6,16 +6,16 @@ import mongoose from 'mongoose'
 const service = 'funding'
 
 export const deposit = (req, res) => {
-    const { accountId } = req.params
+    const { userId } = req.params
     const { amount } = req.body
 
-    if (!mongoose.Types.ObjectId.isValid(accountId))
-        return res.status(400).json(new PayloadError(`Invalid account id format`, 'accountId', service).error)
+    if (!mongoose.Types.ObjectId.isValid(userId))
+        return res.status(400).json(new PayloadError(`Invalid user Id format`, 'userId', service).error)
 
     if (!amount || amount <= 0)
         return res.status(400).json(new PayloadError(`Deposit amount must be greater than 0`, 'amount', service).error)
 
-    AccountService.credit(accountId, amount, 'Deposit')
+    AccountService.credit(userId, amount, 'Deposit')
         .then(account =>
             res.status(200).json({
                 message: `Successfully deposited $${amount}`,
@@ -23,30 +23,30 @@ export const deposit = (req, res) => {
             })
         )
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
 export const withdraw = (req, res) => {
-    const { accountId } = req.params
+    const { userId } = req.params
     const { amount } = req.body
 
-    if (!mongoose.Types.ObjectId.isValid(accountId))
-        return res.status(400).json(new PayloadError(`Invalid account id format`, 'accountId', service).error)
+    if (!mongoose.Types.ObjectId.isValid(userId))
+        return res.status(400).json(new PayloadError(`Invalid user id format`, 'userId', service).error)
 
     if (!amount || amount <= 0)
         return res.status(400).json(new PayloadError(`Withdrawal amount must be greater than 0`, 'amount', service).error)
 
-    AccountService.findById(accountId)
+    AccountService.findByUser(userId)
         .then(account => {
             if (!account)
-                throw new PayloadError(`Account with id ${accountId} not found`, 'accountId', service)
-            if (account.balance < amount)
-                throw new PayloadError(`Insufficient balance. Available: $${account.balance}`, 'balance', service)
+                throw new PayloadError(`No account found for user ${userId}`, 'userId', service)
             if (account.isLocked)
                 throw new PayloadError(`Account is locked`, 'isLocked', service)
+            if (account.balance < amount)
+                throw new PayloadError(`Insufficient balance. Available: $${account.balance}`, 'balance', service)
 
-            return AccountService.debit(accountId, amount, 'Withdrawal')
+            return AccountService.debit(userId, amount, 'Withdrawal')
         })
         .then(account =>
             res.status(200).json({
@@ -55,27 +55,27 @@ export const withdraw = (req, res) => {
             })
         )
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
 
 export const getBalance = (req, res) => {
-    const { accountId } = req.params
+    const { userId } = req.params
 
-    if (!mongoose.Types.ObjectId.isValid(accountId))
-        return res.status(400).json(new PayloadError(`Invalid account id format`, 'accountId', service).error)
+    if (!mongoose.Types.ObjectId.isValid(userId))
+        return res.status(400).json(new PayloadError(`Invalid account id format`, 'userId', service).error)
 
-    AccountService.findById(accountId)
+    AccountService.findById(userId)
         .then(account => {
             if (!account)
-                throw new PayloadError(`Account with id ${accountId} not found`, 'accountId', service)
+                throw new PayloadError(`Account with id ${userId} not found`, 'userId', service)
             res.status(200).json({
-                accountId,
+                userId,
                 balance: account.balance,
                 currency: account.currency
             })
         })
         .catch(err =>
-            res.status(err.statusCode || 500).json(err.error)
+            res.status(err.statusCode || 500).json(err.error || { messages: [err.message] })
         )
 }
