@@ -1,4 +1,4 @@
-import dotenv from "dotenv"
+// import dotenv from "dotenv"
 
 // Load env.development explicitly
 // dotenv.config({ path: ".env.development" }); // alternative script => nodemon --env-file=.env.development src/index.js
@@ -10,7 +10,7 @@ export default {
     prefix: '/api',
     version: '/v1',
     version_number: "1.2.0",
-    service: "User API",
+    service: "Root service",
     docs: "/docs",
     status: "ok",
 
