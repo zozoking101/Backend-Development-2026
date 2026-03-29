@@ -1,0 +1,40 @@
+services:
+
+ mongo:
+  container_name: my-app-db
+  image: mongo:latest
+  restart: unless-stopped
+  env_file: 
+   - .env.development
+   - api/.env.development
+  ports:
+   - "27017:27017"
+  volumes:
+  - mongo-data:/data/db
+  environment:
+    - CHOKIDAR_USEPOLLING=true
+  networks:
+   - my-app-network
+  
+ api:
+  container_name: api
+  build: ./api
+  restart: always
+  ports:
+   - "3000:3000"
+  volumes:
+   - ./api:/usr/src/app
+   - /usr/src/app/node_modules
+  # links:
+  #  - mongo
+  networks:
+   - my-app-network
+  depends_on: #key that waits for the mongo service to start before starting the container
+   - mongo
+
+networks:
+  my-app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

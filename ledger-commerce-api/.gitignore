@@ -1,0 +1,7 @@
+# Ignore real environment files
+.env
+.env.development
+.env.production
+
+# Allow example files
+!.env.example
