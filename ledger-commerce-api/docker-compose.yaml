@@ -6,7 +6,7 @@ services:
   restart: unless-stopped
   env_file: 
    - .env.development
-   - api/.env.development
+   - ./api/.env.development
   ports:
    - "27017:27017"
   volumes:
@@ -22,6 +22,9 @@ services:
   restart: always
   ports:
    - "3000:3000"
+  env_file:                        
+   - .env.development              # root env (DB vars)
+   - api/.env.development          # api env (PORT etc)
   volumes:
    - ./api:/usr/src/app
    - /usr/src/app/node_modules
