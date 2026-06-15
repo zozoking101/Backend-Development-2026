@@ -121,7 +121,7 @@ sudo apt install -y nodejs
 ### 6. Clone this repository
 
 ```bash
-git clone https://github.com/zozoking101/Backend-Development-2026/node-deploy.git
+git clone https://github.com/zozoking101/Backend-Development-2026.git
 cd node-deploy
 ```
 
