@@ -2,6 +2,8 @@
 
 A minimal Express.js application created for learning backend deployment workflows on Linux servers such as DigitalOcean and AWS EC2.
 
+Postman collection: https://documenter.getpostman.com/view/31555318/2sBXwtoovS
+
 ---
 
 ## 🎯 Purpose
@@ -133,6 +135,51 @@ cd './Backend-Development-2026/node-deploy'
 npm install
 npm start
 ```
+
+---
+
+### 8. Verify Application Access
+
+Once the application is running, open a web browser and navigate to:
+
+```text
+http://<SERVER_IP>:9000
+```
+
+Example:
+
+```text
+http://138.68.166.77:9000
+```
+
+You should receive the following response:
+
+```json
+{
+  "message": "Hello World"
+}
+```
+
+To test the personalized greeting endpoint, append a `name` query parameter:
+
+```text
+http://138.68.166.77:9000/?name=Zoé%20Oladokun
+```
+
+Expected response:
+
+```json
+{
+  "message": "Hello Zoé Oladokun"
+}
+```
+
+If the application is not reachable:
+
+* Verify the Node.js process is running.
+* Confirm port `9000` is allowed in the server firewall.
+* Ensure any cloud firewall or security group permits inbound TCP traffic on port `9000`.
+* Check that the application is listening on `0.0.0.0` rather than `localhost`.
 
 ---
 
