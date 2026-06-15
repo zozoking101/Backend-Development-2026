@@ -6,23 +6,29 @@ Each project is self-contained with its own documentation, Postman collection, a
 
 ---
 
-## Projects
+## 📦 Projects
 
 | Project | Stack | Description |
 |---|---|---|
 | [Ledger Commerce API](./ledger-commerce-api) | Node.js, Express, MongoDB, Docker | A fully containerised fullstack ecommerce REST API featuring user auth, product and category management, inventory tracking, a financial ledger system, and balance-gated order processing with a complete returns and refund flow |
+| [Node Deploy](./node-deploy) | Node.js, Express | Minimal Express app designed specifically for learning Linux server deployment and SSH-based workflows |
+
 
 ---
 
-## Tech Stack Coverage
+## 🧱 Tech Stack Coverage
 
-- **Runtime** — Node.js
-- **Framework** — Express.js
-- **Database** — MongoDB with Mongoose ODM
-- **Containerisation** — Docker & Docker Compose
-- **Security** — bcrypt password hashing
-- **Validation** — validate.js schema constraints
-- **API Design** — RESTful architecture with modular subrouter pattern
+This repository demonstrates:
+
+- Node.js backend development
+- Express REST API design
+- MongoDB database modelling (Mongoose)
+- Authentication and security patterns (bcrypt, JWT-ready structure)
+- Docker containerisation
+- Linux server deployment (DigitalOcean / AWS EC2)
+- SSH key-based authentication
+- Production process management (PM2)
+- Git-based deployment workflows
 
 ---
 
@@ -30,11 +36,34 @@ Each project is self-contained with its own documentation, Postman collection, a
 ```
 Backend-Development-2026/
 ├── README.md
-└── ledger-commerce-api/
+├── ledger-commerce-api/
+└── node-deploy/
 ```
 
 ---
 
-## Author
+## 🚀 Learning Path
 
-Built as part of a structured backend development curriculum in 2026.
+This repository follows a progression:
+
+1. Basic Express API setup (`node-deploy`)
+2. Production deployment fundamentals (SSH, Linux, PM2)
+3. Full backend architecture system (`ledger-commerce-api`)
+4. Containerisation and orchestration (Docker + Compose)
+
+---
+
+## 🔐 Key DevOps Concepts Practised
+
+- SSH key generation and authentication
+- Remote Linux server management
+- Node.js production deployment
+- Git-based CI/CD-style workflows (manual)
+- Environment configuration management
+- Process supervision with PM2
+
+---
+
+## 👤 Author
+
+Backend development learning repository built in 2026 as part of structured backend engineering progression.
